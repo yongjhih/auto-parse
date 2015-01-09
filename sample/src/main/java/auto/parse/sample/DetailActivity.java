@@ -13,9 +13,9 @@ public class DetailActivity extends Activity {
     Person person = getIntent().getParcelableExtra("Person");
     textView(R.id.name).setText("Name:" + person.name());
     textView(R.id.id).setText("Id:" + person.id());
-    textView(R.id.height).setText("Height:" + person.heightType());
-    textView(R.id.addresses).setText("Addresses:" + person.addresses());
-    textView(R.id.friends).setText("Friends:" + person.friends());
+    //textView(R.id.height).setText("Height:" + person.heightType());
+    //textView(R.id.addresses).setText("Addresses:" + person.addresses());
+    //textView(R.id.friends).setText("Friends:" + person.friends());
   }
 
   private TextView textView(int id) {

@@ -1,48 +1,42 @@
-Android AutoParse
+ParseObject AutoParse
 ============
-
-Port of Google AutoValue for Android with Parcelable generation goodies.
-
-Why AutoValue?
---------
-
-Because it's awesome.
-I can't explain it better than [that](https://github.com/google/auto/tree/master/value).
-
-Ok then why an Android port?
---------
-
-Two main reasons:
-
-- Google Auto is a monolithic dependency that comes with a lot of libraries, some of them quite big (I'm looking at you Guava) potentially polluting your namespace and increasing apk size.
-Android AutoValue splits the project in two libraries, one to be included in your apk (which just contains the interface) and one only used during compilation.
-
-- AutoParse supports Parcelable generation.
-That's right. One of the most verbose implementation in Android is now made as quick implementing `Serializable`.
-Even quicker because you don't have to generate a `serialVersionUID`.
-Just add `implements Parcelable` to your value objects and you're done.
-This is by far the simplest and fastest way to generate `Parcelable`s on Android with zero reflection and completely transparent to the rest of your application.
-
-Fine, how do I use it?
---------
 
 ```java
 @AutoParse
-abstract class SomeModel implements Parcelable {
-  abstract String name();
-  abstract List<SomeSubModel> subModels();
-  abstract Map<String, OtherSubModel> modelsMap();
+public abstract class Profile extends ParseObject implements Parcelable {
 
-  static SomeModel create(String name, List<SomeSubModel> subModels, Map<String, OtherSubModel> modelsMap) {
-    return new AutoParse_SomeModel(name, subModels, modelsMap);
+  public abstract String name(); // getter
+  public String name;
+
+  public abstract List<ParseUser> friends();
+  public List<ParseUser> friends;
+
+  public abstract Map<String, ParseUser> friendNameToUserMap();
+  public Map<String, ParseUser> friendNameToUserMap;
+
+  public Profile commit() { // dont be abstract method
+      return this;
+  }
+
+  public static Profile create() {
+    return new AutoParse_Profile();
   }
 }
+
+...
+Profile profile = Profile.create();
+profile.name = "Andrew Chen";
+profile.friends = getFriends();
+profile.friendNameToUserMap = getFriendsMap();
+
+profile.commit().saveInBackground();
+...
+
+Profile profile = Profile.create(parseQuery.get("a1b2c3"));
+String name = profile.name();
 ```
 
-That's that simple. And you get `Parcelable`, `hashCode`, `equals` and `toString` implementations for free.
-As your models evolve you don't need to worry about keeping all the boilerplate in sync with the new implementation, it's already taken care of.
-
-Sounds great, where can I download it?
+Installation
 --------
 
 The easy way is to use Gradle.
@@ -62,8 +56,8 @@ apply plugin: 'android'
 apply plugin: 'android-apt'
 
 dependencies {
-  compile 'com.github.frankiesardo:auto-parcel:+'
-  apt 'com.github.frankiesardo:auto-parcel-processor:+'
+  compile 'com.infstory:auto-parse:+'
+  apt 'com.infstory:auto-parse-processor:+'
 }
 ```
 
@@ -73,6 +67,7 @@ Check out the sample project for a working example.
 License
 -------
 
+    Copyright 2015 8tory, Inc.
     Copyright 2014 Frankie Sardo
     Copyright 2013 Google, Inc.
 

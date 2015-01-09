@@ -191,25 +191,122 @@ public class AutoParseProcessor extends AbstractProcessor {
       // Imports
       "$[imports:i||import $[i];\n]",
 
+      "import java.util.Date;",
+      "import org.json.JSONArray;",
+      "import org.json.JSONObject;",
+      "import java.util.List;",
+      "import java.util.Map;",
+      "import com.parse.ParseFile;",
+      "import com.parse.ParseGeoPoint;",
+      "import com.parse.ParseObject;",
+      "import com.parse.ParseRelation;",
+      "import com.parse.ParseUser;\n",
+
       // Class declaration
-      "final class $[subclass]$[formaltypes] extends $[origclass]$[actualtypes] {",
+      "public class $[subclass]$[formaltypes] extends $[origclass]$[actualtypes] {",
 
       // Fields
-      "$[props:p||  private final $[p.type] $[p];\n]",
+      //"$[props:p||  public $[p.type] $[p];\n]",
+
+      "  ParseObject parseObject;\n",
 
       // Constructor
-      "  $[subclass](\n      $[props:p|,\n      |$[p.type] $[p]]) {",
-      "$[props:p|\n|$[p.primitive!$[p.nullable!    if ($[p] == null) {",
-      "      throw new NullPointerException(\"Null $[p]\");",
-      "    }",
-      "]]" +
+      "  public $[subclass]() {",
+      "    this.parseObject = this;",
+      "  }\n",
+
+      "  public $[subclass](ParseObject parseObject) {",
+      "    this.parseObject = parseObject;",
+      "  }\n",
+
+      "  public $[subclass](\n      $[props:p|,\n      |$[p.type] $[p]]) {",
+      "    this();",
+      "$[props:p|\n|",
       "    this.$[p] = $[p];]",
+      "  }\n",
+
+      "  public $[origclass]$[actualtypes] commit() {",
+      "$[props:p|\n|",
+      "    parseObject.put(\"$[p]\", $[p]);]",
+      "    return ($[origclass]$[actualtypes]) this;",
+      "  }\n",
+
+      "  private Object _get(String key, Object defValue) {",
+      "      return parseObject.get(key);",
+      "  }\n",
+
+      "  private boolean _get(String key, Boolean defValue) {",
+      "      return parseObject.getBoolean(key);",
+      "  }\n",
+
+      "  private byte[] _get(String key, byte[] defValue) {",
+      "      return parseObject.getBytes(key);",
+      "  }\n",
+
+      "  private Date _get(String key, Date defValue) {",
+      "      return parseObject.getDate(key);",
+      "  }\n",
+
+      "  private double _get(String key, Double defValue) {",
+      "      return parseObject.getDouble(key);",
+      "  }\n",
+
+      "  private int _get(String key, Integer defValue) {",
+      "      return parseObject.getInt(key);",
+      "  }\n",
+
+      "  private JSONArray _get(String key, JSONArray defValue) {",
+      "      return parseObject.getJSONArray(key);",
+      "  }\n",
+
+      "  private JSONObject _get(String key, JSONObject defValue) {",
+      "      return parseObject.getJSONObject(key);",
+      "  }\n",
+
+      "  private <T> List<T> _get(String key, List<T> defValue) {",
+      "      return (List<T>) parseObject.getList(key);",
+      "  }\n",
+
+      "  private <V> Map<String, V> _get(String key, Map<String, V> defValue) {",
+      "      return (Map<String, V>) parseObject.getMap(key);",
+      "  }\n",
+
+      "  private <T extends ParseObject> ParseRelation<T> _get(String key, ParseRelation<T> defValue) {",
+      "      return (ParseRelation<T>) parseObject.getRelation(key);",
+      "  }\n",
+
+      "  private long _get(String key, Long defValue) {",
+      "      return parseObject.getLong(key);",
+      "  }\n",
+
+      "  private Number _get(String key, Number defValue) {",
+      "      return parseObject.getNumber(key);",
+      "  }\n",
+
+      "  private ParseFile _get(String key, ParseFile defValue) {",
+      "      return parseObject.getParseFile(key);",
+      "  }\n",
+
+      "  private ParseGeoPoint _get(String key, ParseGeoPoint defValue) {",
+      "      return parseObject.getParseGeoPoint(key);",
+      "  }\n",
+
+      "  private ParseObject _get(String key, ParseObject defValue) {",
+      "      return parseObject.getParseObject(key);",
+      "  }\n",
+
+      "  private ParseUser _get(String key, ParseUser defValue) {",
+      "      return parseObject.getParseUser(key);",
+      "  }\n",
+
+      "  private String _get(String key, String defValue) {",
+      "      return parseObject.getString(key);",
       "  }",
 
       // Property getters
       "$[props:p|\n|\n  @Override",
       "  $[p.access]$[p.type] $[p]() {",
-      "    return $[p.array?[$[p.nullable?$[p] == null ? null : ]$[p].clone()][$[p]]];",
+      "    return $[p.array?[$[p.nullable?$[p] == null ? null : ]$[p].clone()][_get(\"$[p]\", ($[p.type]) null)]];",
       "  }]",
 
       // toString()
