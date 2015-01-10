@@ -1,12 +1,12 @@
-ParseObject AutoParse
+AutoParse for ParseObject 
 ============
 
 ```java
 @AutoParse
 public abstract class Profile extends ParseObject implements Parcelable {
 
-  public abstract String name(); // getter
-  public String name;
+  public abstract String name(); // getString("name");
+  public String name;            // put("name", name); via AutoParse_Profile.commit();
 
   public abstract List<ParseUser> friends();
   public List<ParseUser> friends;
@@ -39,9 +39,7 @@ String name = profile.name();
 Installation
 --------
 
-The easy way is to use Gradle.
-
-```groovy
+```gradle
 buildscript {
   repositories {
     mavenCentral()
@@ -63,6 +61,13 @@ dependencies {
 
 I recommend using the `android-apt` plugin so that Android Studio picks up the generated files.
 Check out the sample project for a working example.
+
+See Also
+-----
+
+auto-parse uses compile-time annotation that's faster than runtime annotation reflection.
+
+* https://github.com/8tory/simple-parse via runtime annotation reflection, slower.
 
 License
 -------
