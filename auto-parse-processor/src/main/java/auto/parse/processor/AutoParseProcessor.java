@@ -263,14 +263,17 @@ public class AutoParseProcessor extends AbstractProcessor {
       "      return parseObject.getJSONObject(key);",
       "  }\n",
 
+      "  @SuppressWarnings(\"unchecked\")",
       "  private <T> List<T> _get(String key, List<T> defValue) {",
       "      return (List<T>) parseObject.getList(key);",
       "  }\n",
 
+      "  @SuppressWarnings(\"unchecked\")",
       "  private <V> Map<String, V> _get(String key, Map<String, V> defValue) {",
       "      return (Map<String, V>) parseObject.getMap(key);",
       "  }\n",
 
+      "  @SuppressWarnings(\"unchecked\")",
       "  private <T extends ParseObject> ParseRelation<T> _get(String key, ParseRelation<T> defValue) {",
       "      return (ParseRelation<T>) parseObject.getRelation(key);",
       "  }\n",
