@@ -13,7 +13,7 @@ dependencies {
   testCompile 'com.google.android:android:4.1.1.4'
 
   testCompile 'com.facebook.android:facebook-android-sdk:3.20.+'
-  testCompile 'com.infstory:parse:+'
+  testCompile 'com.infstory:parse:1.8.0'
 }
 
 tasks.withType(Test) {

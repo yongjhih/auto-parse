@@ -17,5 +17,5 @@ dependencies {
   compile project(':auto-parse')
   apt project(':auto-parse-processor')
   compile 'com.facebook.android:facebook-android-sdk:3.20.+'
-  compile 'com.infstory:parse:+'
+  compile 'com.infstory:parse:1.8.0'
 }
