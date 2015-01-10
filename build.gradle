@@ -15,9 +15,15 @@ subprojects {
       url "https://oss.sonatype.org/content/repositories/snapshots/"
     }
     maven { url 'https://github.com/8tory/parse-android-sdk.m2/raw/master/' }
+    //maven { url "file:///home/andrew/adt-bundle-linux/sdk/extras/android/m2repository" }
+    maven { url 'https://github.com/8tory/support-library.m2/raw/master/' }
     mavenLocal()
   }
 
-  project.group = 'com.github.frankiesardo'
+  project.version = VERSION_NAME
+  project.group = GROUP
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2'
+}

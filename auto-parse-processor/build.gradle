@@ -8,11 +8,12 @@ dependencies {
   compile 'com.google.auto.service:auto-service:1.0-rc1'
   compile 'com.google.code.findbugs:jsr305:2.0.3'
   compile 'org.ow2.asm:asm:4.1'
-  //compile 'com.facebook.android:facebook-android-sdk:3.20.+'
-  //compile 'com.infstory:parse:+'
 
   testCompile 'com.google.testing.compile:compile-testing:0.4'
   testCompile 'com.google.android:android:4.1.1.4'
+
+  testCompile 'com.facebook.android:facebook-android-sdk:3.20.+'
+  testCompile 'com.infstory:parse:+'
 }
 
 tasks.withType(Test) {
@@ -22,3 +23,4 @@ tasks.withType(Test) {
   }
 }
 
+apply from: 'gradle-mvn-push.gradle'
