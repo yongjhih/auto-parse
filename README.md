@@ -1,18 +1,42 @@
 AutoParse for ParseObject 
 ============
 
+before:
+
 ```java
+ParseObject gameScore = new ParseObject("GameScore");
+gameScore.put("score", 1337);
+gameScore.put("playerName", "Sean Plott");
+gameScore.put("cheatMode", false);
+gameScore.saveInBackground();
+```
+
+after:
+
+```java
+ParseGameScore gameScore = ParseGameScore.create();
+gameScore.score = 1337;
+gameScore.playerName = "Sean Plott";
+gameScore.cheatMode = false;
+ParseGameScore.commit().saveInBackground();
+```
+
+Usage
+-----
+
+```java
+@ParseClassName("GameScore")
 @AutoParse
-public abstract class Profile extends ParseObject implements Parcelable {
+public abstract class ParseGameScore extends ParseObject implements Parcelable {
 
-  public abstract String name(); // getString("name");
-  public String name;            // put("name", name); via AutoParse_Profile.commit();
+  public abstract String playerName(); // getString("playerName");
+  public String playerName;            // put("playerName", name);
 
-  public abstract List<ParseUser> friends();
-  public List<ParseUser> friends;
+  public abstract Integer score();
+  public Integer score;
 
-  public abstract Map<String, ParseUser> friendNameToUserMap();
-  public Map<String, ParseUser> friendNameToUserMap;
+  public abstract Boolean cheatMode();
+  public Boolean cheatMode; 
 
   public Profile commit() { // dont be abstract method
       return this;
@@ -22,18 +46,6 @@ public abstract class Profile extends ParseObject implements Parcelable {
     return new AutoParse_Profile();
   }
 }
-
-...
-Profile profile = Profile.create();
-profile.name = "Andrew Chen";
-profile.friends = getFriends();
-profile.friendNameToUserMap = getFriendsMap();
-
-profile.commit().saveInBackground();
-...
-
-Profile profile = Profile.create(parseQuery.get("a1b2c3"));
-String name = profile.name();
 ```
 
 Installation
