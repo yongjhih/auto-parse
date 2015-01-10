@@ -26,7 +26,7 @@ import com.parse.ParseUser;
 
 public class AutoParseHelper {
     public static Object get(ParseObject parseObject, String key, Object defValue) {
-        return parseObject.get(ParseObject parseObject, key);
+        return parseObject.getParseObject(key);
     }
 
     public static boolean get(ParseObject parseObject, String key, Boolean defValue) {
