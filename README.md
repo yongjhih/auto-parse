@@ -38,12 +38,12 @@ public abstract class ParseGameScore extends ParseObject implements Parcelable {
   public abstract Boolean cheatMode();
   public Boolean cheatMode; 
 
-  public Profile commit() { // dont be abstract method
+  public ParseGameScore commit() { // dont be abstract method
       return this;
   }
 
-  public static Profile create() {
-    return new AutoParse_Profile();
+  public static ParseGameScore create() {
+    return new AutoParse_ParseGameScore();
   }
 }
 ```
