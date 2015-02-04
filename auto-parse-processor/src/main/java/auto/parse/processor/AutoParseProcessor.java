@@ -227,7 +227,7 @@ public class AutoParseProcessor extends AbstractProcessor {
 
       "  public $[origclass]$[actualtypes] commit() {",
       "$[props:p|\n|",
-      "    parseObject.put(\"$[p]\", $[p]);]",
+      "    if ($[p] != null) parseObject.put(\"$[p]\", $[p]);]",
       "    return ($[origclass]$[actualtypes]) this;",
       "  }\n",
 
