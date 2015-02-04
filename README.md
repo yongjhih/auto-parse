@@ -21,6 +21,15 @@ gameScore.cheatMode = false;
 ParseGameScore.commit().saveInBackground();
 ```
 
+```java
+ParseQuery<AutoParse_ParseGameScore> = ParseQuery.getQuery(AutoParse_ParseGameScore.class);
+...
+ParseGameScore gameScore = (ParseGameScore) query.findFirst();
+gameScore.score();
+gameScore.playerName();
+gameScore.cheatMode();
+```
+
 Usage
 -----
 
