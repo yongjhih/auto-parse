@@ -396,27 +396,6 @@ public class AutoParseProcessor extends AbstractProcessor {
       "    return false;",
       "  }]",
 
-      // hashCode()
-      "$[hashCode?",
-      "$[cacheHashCode?  private transient int hashCode;\n\n]" +
-
-      "  @Override",
-      "  public int hashCode() {",
-      "$[cacheHashCode?    if (hashCode != 0) {",
-      "      return hashCode;",
-      "    }\n]" +
-      "    int h = 1;",
-      "$[props:p||" +
-      "    h *= 1000003;",
-      "    h ^= $[p.hashCodeExpression];",
-      "]" +
-      "$[cacheHashCode?    hashCode = h;\n]" +
-      "    return h;",
-      "  }]" +
-
-      // serialVersionUID
-      "$[serialVersionUID?\n\n  private static final long serialVersionUID = $[serialVersionUID];]",
-
       // parcelable
       "$[parcelable?\n\n",
       "  public static final android.os.Parcelable.Creator<$[origclass]> CREATOR = new android.os.Parcelable.Creator<$[origclass]>() {",
