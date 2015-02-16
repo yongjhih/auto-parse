@@ -378,7 +378,7 @@ public class AutoParseProcessor extends AbstractProcessor {
       "  public String toString() {",
       "    return \"$[simpleclassname]{\"$[props?\n        + \"]" +
       "$[props:p|\n        + \", |" +
-                "$[p]=\" + $[p.array?[$[Arrays].toString($[p])][$[p]]]]",
+                "$[p]=\" + $[p.array?[$[Arrays].toString($[p])][$[p]()]]]",
       "        + \"}\";",
       "  }]",
 
