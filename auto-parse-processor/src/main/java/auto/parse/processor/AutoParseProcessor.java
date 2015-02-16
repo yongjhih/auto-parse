@@ -382,20 +382,6 @@ public class AutoParseProcessor extends AbstractProcessor {
       "        + \"}\";",
       "  }]",
 
-      // equals(Object)
-      "$[equals?\n  @Override",
-      "  public boolean equals(Object o) {",
-      "    if (o == this) {",
-      "      return true;",
-      "    }",
-      "    if (o instanceof $[origclass]) {",
-      "      $[origclass]$[wildcardtypes] that = ($[origclass]$[wildcardtypes]) o;",
-      "      return $[props!true]" +
-                   "$[props:p|\n          && |($[p.equalsThatExpression])];",
-      "    }",
-      "    return false;",
-      "  }]",
-
       // parcelable
       "$[parcelable?\n\n",
       "  public static final android.os.Parcelable.Creator<$[origclass]> CREATOR = new android.os.Parcelable.Creator<$[origclass]>() {",
