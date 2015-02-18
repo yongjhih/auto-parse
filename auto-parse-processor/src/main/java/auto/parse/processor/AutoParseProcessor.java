@@ -191,7 +191,6 @@ public class AutoParseProcessor extends AbstractProcessor {
       // Imports
       "$[imports:i||import $[i];\n]",
 
-      "import com.parse.ParseClassName;",
       "import java.util.Date;",
       "import org.json.JSONArray;",
       "import org.json.JSONObject;",
@@ -204,8 +203,6 @@ public class AutoParseProcessor extends AbstractProcessor {
       "import com.parse.ParseUser;\n",
 
       // Class declaration
-
-      "@ParseClassName(\"$[origclass]\")",
       "public class $[subclass]$[formaltypes] extends $[origclass]$[actualtypes] {",
 
       // Fields
