@@ -200,6 +200,7 @@ public class AutoParseProcessor extends AbstractProcessor {
       "import com.parse.ParseFile;",
       "import com.parse.ParseGeoPoint;",
       "import com.parse.ParseObject;",
+      "import com.parse.ParseQuery;",
       "import com.parse.ParseRelation;",
       "import com.parse.ParseUser;\n",
 
@@ -408,6 +409,14 @@ public class AutoParseProcessor extends AbstractProcessor {
       "",
       "  @Override public int describeContents() {",
       "    return 0;",
+      "  }",
+      "",
+      "  public static ParseQuery<$[origclass]> getQuery() {",
+      "    return ParseQuery.getQuery($[origclass].class);",
+      "  }",
+      "",
+      "  public static ParseQuery<$[subclass]> getAutoQuery() {",
+      "    return ParseQuery.getQuery($[subclass].class);",
       "  }",
       "]",
 
