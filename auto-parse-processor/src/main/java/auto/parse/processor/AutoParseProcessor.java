@@ -223,16 +223,10 @@ public class AutoParseProcessor extends AbstractProcessor {
       "    this.parseObject = parseObject;",
       "  }\n",
 
-      "  public $[subclass](\n      $[props:p|,\n      |$[p.type] $[p]]) {",
+      "  public $[subclass](\n      $[getters:p|,\n      |$[p.type] $[p.getField]]) {",
       "    this();",
-      "$[props:p|\n|",
-      "    this.$[p] = $[p];]",
-      "  }\n",
-
-      "  public $[origclass]$[actualtypes] commit() {",
-      "$[props:p|\n|",
-      "    if ($[p] != null) parseObject.put(\"$[p]\", $[p]);]",
-      "    return ($[origclass]$[actualtypes]) this;",
+      "$[setters:p|\n|",
+      "    $[p]($[p.getField]);]",
       "  }\n",
 
       "  private Object _get(String key, Object defValue) {",
@@ -311,9 +305,8 @@ public class AutoParseProcessor extends AbstractProcessor {
       "  }",
 
       // Property getters
-      "$[props:p|\n|\n  @Override",
+      "$[getters:p|\n|\n  @Override",
       "  $[p.access]$[p.type] $[p]() {",
-      "    $[p.array?[$[p.nullable?return $[p] == null ? null : ]return $[p].clone();][",
       //"    if (int.class.equals($[p.type].class)) {",
       //"      return parseObject.getInt(key);",
       //"    }",
@@ -374,15 +367,22 @@ public class AutoParseProcessor extends AbstractProcessor {
       //"    if (String.class.equals($[p.type].class)) {",
       //"      return parseObject.getString(key);",
       //"    }]]",
-      "    return _get(\"$[p]\", ($[p.type]) null);]]",
+      "    return _get(\"$[p.getField]\", ($[p.type]) null);",
       "  }]",
+
+      // Property setters
+      "$[setters:p|\n|\n    @Override",
+      "    $[p.access]$[origclass] $[p]($[p.getTypeArgs]) {",
+      "        put(\"$[p.getField]\", $[p.getArgs]);",
+      "        return this;",
+      "    }]",
 
       // toString()
       "$[toString?\n  @Override",
       "  public String toString() {",
-      "    return \"$[simpleclassname]{\"$[props?\n        + \"]" +
-      "$[props:p|\n        + \", |" +
-                "$[p]=\" + $[p.array?[$[Arrays].toString($[p])][$[p]()]]]",
+      "    return \"$[simpleclassname]{\"$[getters?\n        + \"]" +
+      "$[getters:p|\n        + \", |" +
+                "$[p.getField]=\" + $[p.array?[$[Arrays].toString($[p]())][$[p]()]]]",
       "        + \"}\";",
       "  }]",
 
@@ -400,11 +400,11 @@ public class AutoParseProcessor extends AbstractProcessor {
       "  private final static java.lang.ClassLoader CL = $[subclass].class.getClassLoader();",
       "",
       "  private $[subclass](android.os.Parcel in) {",
-      "    this(\n      $[props:p|,\n      |($[p.castType]) in.readValue(CL)]);",
+      "    this(\n      $[getters:p|,\n      |($[p.castType]) in.readValue(CL)]);",
       "  }",
       "",
       "  @Override public void writeToParcel(android.os.Parcel dest, int flags) {",
-      "$[props:p||    dest.writeValue($[p]);\n]",
+      "$[getters:p||    dest.writeValue($[p]());\n]",
       "  }",
       "",
       "  @Override public int describeContents() {",
@@ -439,6 +439,20 @@ public class AutoParseProcessor extends AbstractProcessor {
     @Override
     public String toString() {
       return method.getSimpleName().toString();
+    }
+
+    public String getField() {
+      String field = method.getSimpleName().toString().replaceFirst("^set", "")
+          .replaceFirst("^get", "");
+      return field.substring(0, 1).toLowerCase() + field.substring(1);
+    }
+
+    public String getTypeArgs() {
+      return formalTypeArgsString(method);
+    }
+
+    public String getArgs() {
+      return formalArgsString(method);
     }
 
     TypeElement owner() {
@@ -664,7 +678,7 @@ public class AutoParseProcessor extends AbstractProcessor {
     findLocalAndInheritedMethods(type, methods);
     vars.putAll(objectMethodsToGenerate(methods));
     dontImplementAnnotationEqualsOrHashCode(type, vars);
-    List<ExecutableElement> toImplement = methodsToImplement(methods);
+    List<ExecutableElement> toImplement = methodsToImplement(methods, vars);
     Set<TypeMirror> types = new HashSet<TypeMirror>();
     types.addAll(returnTypesOf(toImplement));
     TypeMirror javaUtilArrays = getTypeMirror(Arrays.class);
@@ -677,15 +691,22 @@ public class AutoParseProcessor extends AbstractProcessor {
     TypeSimplifier typeSimplifier = new TypeSimplifier(processingEnv.getTypeUtils(), pkg, types);
     vars.put("imports", typeSimplifier.typesToImport());
     vars.put("Arrays", typeSimplifier.simplify(javaUtilArrays));
-    List<Property> props = new ArrayList<Property>();
+    List<Property> getters = new ArrayList<Property>();
+    List<Property> setters = new ArrayList<Property>();
     for (ExecutableElement method : toImplement) {
       String propType = typeSimplifier.simplify(method.getReturnType());
       Property prop = new Property(method, propType, vars);
-      props.add(prop);
+      if (method.getSimpleName().toString().startsWith("get")) {
+        getters.add(prop);
+      } else if (method.getSimpleName().toString().startsWith("set")) {
+        setters.add(prop);
+      }
     }
     // If we are running from Eclipse, undo the work of its compiler which sorts methods.
-    eclipseHack().reorderProperties(props);
-    vars.put("props", props);
+    eclipseHack().reorderProperties(getters);
+    eclipseHack().reorderProperties(setters);
+    vars.put("getters", getters);
+    vars.put("setters", setters);
     vars.put("serialVersionUID", getSerialVersionUID(type));
 
     TypeMirror parcelable = getTypeMirror("android.os.Parcelable");
@@ -751,8 +772,8 @@ public class AutoParseProcessor extends AbstractProcessor {
     return vars;
   }
 
-  private List<ExecutableElement> methodsToImplement(List<ExecutableElement> methods)
-      throws CompileException {
+  private List<ExecutableElement> methodsToImplement(List<ExecutableElement> methods,
+      Map<String, Object> vars) throws CompileException {
     List<ExecutableElement> toImplement = new ArrayList<ExecutableElement>();
     boolean errors = false;
     for (ExecutableElement method : methods) {
@@ -761,12 +782,22 @@ public class AutoParseProcessor extends AbstractProcessor {
         if (method.getParameters().isEmpty() && method.getReturnType().getKind() != TypeKind.VOID) {
           if (isReferenceArrayType(method.getReturnType())) {
             reportError("An @AutoParse class cannot define an array-valued property unless it is "
-                + "a primitive array", method);
+                + "a byte array", method);
             errors = true;
           }
+
+          toImplement.add(method);
+        } else if ((method.getParameters().size() == 1) &&
+            (method.getReturnType().toString().replaceAll(".*\\.", "").equals((String) vars.get("origclass")))) {
+          if (isReferenceArrayType(method.getParameters().get(0).asType())) {
+            reportError("An @AutoParse class cannot define an array-valued property unless it is "
+                + "a byte array", method);
+            errors = true;
+          }
+
           toImplement.add(method);
         } else {
-          reportError("@AutoParse classes cannot have abstract methods other than property getters",
+          reportError("@AutoParse classes cannot have abstract methods other than property getters and setters",
               method);
           errors = true;
         }
@@ -791,7 +822,7 @@ public class AutoParseProcessor extends AbstractProcessor {
 
   private static boolean isReferenceArrayType(TypeMirror type) {
     return type.getKind() == TypeKind.ARRAY
-        && !((ArrayType) type).getComponentType().getKind().isPrimitive();
+        && (((ArrayType) type).getComponentType().getKind() != TypeKind.BYTE);
   }
 
   private void writeSourceFile(String className, String text, TypeElement originatingType) {
@@ -919,6 +950,36 @@ public class AutoParseProcessor extends AbstractProcessor {
         sep = ", ";
       }
       return s + ">";
+    }
+  }
+
+  private static String formalArgsString(ExecutableElement method) {
+    List<? extends VariableElement> typeParameters = method.getParameters();
+    if (typeParameters.isEmpty()) {
+      return "";
+    } else {
+      String s = "";
+      String sep = "";
+      for (VariableElement typeParameter : typeParameters) {
+        s += sep + typeParameter.getSimpleName();
+        sep = ", ";
+      }
+      return s;
+    }
+  }
+
+  private static String formalTypeArgsString(ExecutableElement method) {
+    List<? extends VariableElement> typeParameters = method.getParameters();
+    if (typeParameters.isEmpty()) {
+      return "";
+    } else {
+      String s = "";
+      String sep = "";
+      for (VariableElement typeParameter : typeParameters) {
+        s += sep + typeParameter.asType() + " " + typeParameter.getSimpleName();
+        sep = ", ";
+      }
+      return s;
     }
   }
 

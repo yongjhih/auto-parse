@@ -27,15 +27,14 @@ public abstract class Person extends com.parse.ParseObject implements Parcelable
     //return new AutoParse_Person(name, id);
   //}
 
-  public abstract String name();
-  public abstract Long id();
+  public abstract String getName();
+  public abstract Person setName(String name);
+  public abstract Long getId();
+  public abstract Person setId(Long id);
   //public abstract HeightBucket heightType();
-  public abstract Map<String, Address> addresses();
-  public abstract List<Person> friends();
+  public abstract Map<String, Address> getAddresses();
+  public abstract Person setAddresses(Map<String, Address> addresses);
+  public abstract List<Person> getFriends();
+  public abstract Person setFriends(List<Person> friends);
 
-  public String name;
-  public Long id;
-  //public HeightBucket heightType;
-  public Map<String, Address> addresses;
-  public List<Person> friends;
 }

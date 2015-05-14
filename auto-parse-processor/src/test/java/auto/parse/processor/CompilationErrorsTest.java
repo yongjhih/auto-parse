@@ -101,8 +101,8 @@ public class CompilationErrorsTest extends TestCase {
         "import auto.parse.AutoParse;\n" +
         "@AutoParse\n" +
         "public abstract class Baz extends com.parse.ParseObject {\n" +
-        "  public Integer integer;\n" +
-        "  public abstract Integer integer();\n" +
+        "  public abstract Integer getInteger();\n" +
+        "  public abstract Baz setInteger(Integer integer);\n" +
         "  public static Baz create(Integer integer) {\n" +
         "    return new AutoParse_Baz(integer);\n" +
         "  }\n" +
@@ -122,8 +122,8 @@ public class CompilationErrorsTest extends TestCase {
         "import auto.parse.AutoParse;\n" +
         "@AutoParse\n" +
         "public abstract class Baz extends com.parse.ParseObject {\n" +
-        "  public int[][] ints;\n" +
-        "  public abstract int[][] ints();\n" +
+        "  public abstract int[][] getInts();\n" +
+        "  public abstract Baz setInts(int[][] ints);\n" +
         "  public static Baz create(int[][] ints) {\n" +
         "    return new AutoParse_Baz(ints);\n" +
         "  }\n" +
@@ -137,8 +137,8 @@ public class CompilationErrorsTest extends TestCase {
         "import auto.parse.AutoParse;\n" +
         "@AutoParse\n" +
         "public abstract class Baz extends com.parse.ParseObject {\n" +
-        "  public String[] strings;\n" +
-        "  public abstract String[] strings();\n" +
+        "  public abstract String[] getStrings();\n" +
+        "  public abstract Baz setStrings(String[] strings);\n" +
         "  public static Baz create(String[] strings) {\n" +
         "    return new AutoParse_Baz(strings);\n" +
         "  }\n" +
@@ -213,14 +213,14 @@ public class CompilationErrorsTest extends TestCase {
         "    static Parent create(int randomProperty) {\n" +
         "      return new AutoParse_Outer_Parent(randomProperty);\n" +
         "    }\n" +
-        "    abstract int randomProperty();\n" +
+        "    abstract int getRandomProperty();\n" +
         "  }\n" +
         "  @AutoParse\n" +
         "  static abstract class Child extends Parent {\n" +
         "    static Child create(int randomProperty) {\n" +
         "      return new AutoParse_Outer_Child(randomProperty);\n" +
         "    }\n" +
-        "    abstract int randomProperty();\n" +
+        "    abstract int getRandomProperty();\n" +
         "  }\n" +
         "}\n";
     assertCompilationFails(ImmutableList.of(testSourceCode));
@@ -240,8 +240,8 @@ public class CompilationErrorsTest extends TestCase {
         "@AutoParse\n" +
         "public abstract class Baz extends com.parse.ParseObject implements java.io.Serializable {\n" +
         "  " + mistake + ";\n" +
-        "  public int foo;\n" +
-        "  public abstract int foo();\n" +
+        "  public abstract int getFoo();\n" +
+        "  public abstract Baz setFoo(int foo);\n" +
         "}\n";
       assertCompilationFails(ImmutableList.of(testSourceCode));
     }
