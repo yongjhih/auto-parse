@@ -779,7 +779,8 @@ public class AutoParseProcessor extends AbstractProcessor {
     for (ExecutableElement method : methods) {
       if (method.getModifiers().contains(Modifier.ABSTRACT)
           && !isToStringOrEqualsOrHashCode(method) && !isFromParcelable(method)) {
-        if (method.getParameters().isEmpty() && method.getReturnType().getKind() != TypeKind.VOID) {
+        if (method.getParameters().isEmpty() && method.getReturnType().getKind() != TypeKind.VOID &&
+            (method.getSimpleName().toString().startsWith("get"))) {
           if (isReferenceArrayType(method.getReturnType())) {
             reportError("An @AutoParse class cannot define an array-valued property unless it is "
                 + "a byte array", method);
@@ -788,7 +789,8 @@ public class AutoParseProcessor extends AbstractProcessor {
 
           toImplement.add(method);
         } else if ((method.getParameters().size() == 1) &&
-            (method.getReturnType().toString().replaceAll(".*\\.", "").equals((String) vars.get("origclass")))) {
+            (method.getReturnType().toString().replaceAll(".*\\.", "").equals((String) vars.get("origclass"))) &&
+            (method.getSimpleName().toString().startsWith("set"))) {
           if (isReferenceArrayType(method.getParameters().get(0).asType())) {
             reportError("An @AutoParse class cannot define an array-valued property unless it is "
                 + "a byte array", method);
