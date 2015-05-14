@@ -659,6 +659,7 @@ public class AutoParseProcessor extends AbstractProcessor {
       abortWithError("One @AutoParse class may not extend another", type);
     }
     Map<String, Object> vars = new TreeMap<String, Object>();
+    vars.put("type", type);
     vars.put("pkg", TypeSimplifier.packageNameOf(type));
     vars.put("origclass", classNameOf(type));
     vars.put("simpleclassname", simpleNameOf(classNameOf(type)));
@@ -772,6 +773,20 @@ public class AutoParseProcessor extends AbstractProcessor {
     return vars;
   }
 
+  private boolean isSuperType(TypeMirror type, TypeMirror origClass) {
+    if (origClass.equals(type)) {
+      return true;
+    }
+
+    List<? extends TypeMirror> superTypes = processingEnv.getTypeUtils().directSupertypes(origClass);
+    for (TypeMirror superType : superTypes) {
+      if (superType.equals(type)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   private List<ExecutableElement> methodsToImplement(List<ExecutableElement> methods,
       Map<String, Object> vars) throws CompileException {
     List<ExecutableElement> toImplement = new ArrayList<ExecutableElement>();
@@ -789,7 +804,7 @@ public class AutoParseProcessor extends AbstractProcessor {
 
           toImplement.add(method);
         } else if ((method.getParameters().size() == 1) &&
-            (method.getReturnType().toString().replaceAll(".*\\.", "").equals((String) vars.get("origclass"))) &&
+            isSuperType(method.getReturnType(), ((TypeElement) vars.get("type")).asType()) &&
             (method.getSimpleName().toString().startsWith("set"))) {
           if (isReferenceArrayType(method.getParameters().get(0).asType())) {
             reportError("An @AutoParse class cannot define an array-valued property unless it is "
