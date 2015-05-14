@@ -1,6 +1,7 @@
-AutoParse for ParseObject 
+AutoParse for ParseObject
 ============
 
+[![auto-parse](art/auto-parse.png)](art/auto-parse.png)
 before:
 
 ```java
