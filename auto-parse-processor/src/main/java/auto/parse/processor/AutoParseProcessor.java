@@ -448,7 +448,7 @@ public class AutoParseProcessor extends AbstractProcessor {
     }
 
     public String getTypeArgs() {
-      return formalTypeArgsString(method);
+      return formalTypeArgsString(method, (TypeSimplifier) vars.get("typeSimplifier"));
     }
 
     public String getArgs() {
@@ -458,7 +458,7 @@ public class AutoParseProcessor extends AbstractProcessor {
     public String getDefalutValue() {
         String defaultValue = formalArgsString(method);
         if (defaultValue.isEmpty()) {
-            defaultValue = "(" + method.getReturnType() + ") null";
+            defaultValue = "(" + type + ") null";
         }
         return defaultValue;
     }
@@ -698,6 +698,7 @@ public class AutoParseProcessor extends AbstractProcessor {
     }
     String pkg = TypeSimplifier.packageNameOf(type);
     TypeSimplifier typeSimplifier = new TypeSimplifier(processingEnv.getTypeUtils(), pkg, types);
+    vars.put("typeSimplifier", typeSimplifier);
     vars.put("imports", typeSimplifier.typesToImport());
     vars.put("Arrays", typeSimplifier.simplify(javaUtilArrays));
     List<Property> getters = new ArrayList<Property>();
@@ -1003,7 +1004,7 @@ public class AutoParseProcessor extends AbstractProcessor {
     }
   }
 
-  private static String formalTypeArgsString(ExecutableElement method) {
+  private static String formalTypeArgsString(ExecutableElement method, TypeSimplifier typeSimplifier) {
     List<? extends VariableElement> typeParameters = method.getParameters();
     if (typeParameters.isEmpty()) {
       return "";
@@ -1011,7 +1012,7 @@ public class AutoParseProcessor extends AbstractProcessor {
       String s = "";
       String sep = "";
       for (VariableElement typeParameter : typeParameters) {
-        s += sep + typeParameter.asType() + " " + typeParameter.getSimpleName();
+        s += sep + typeSimplifier.simplify(typeParameter.asType()) + " " + typeParameter.getSimpleName();
         sep = ", ";
       }
       return s;
