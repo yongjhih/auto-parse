@@ -306,7 +306,7 @@ public class AutoParseProcessor extends AbstractProcessor {
 
       // Property getters
       "$[getters:p|\n|\n  @Override",
-      "  $[p.access]$[p.type] $[p]() {",
+      "  $[p.access]$[p.type] $[p]($[p.getTypeArgs]) {",
       //"    if (int.class.equals($[p.type].class)) {",
       //"      return parseObject.getInt(key);",
       //"    }",
@@ -367,7 +367,7 @@ public class AutoParseProcessor extends AbstractProcessor {
       //"    if (String.class.equals($[p.type].class)) {",
       //"      return parseObject.getString(key);",
       //"    }]]",
-      "    return _get(\"$[p.getField]\", ($[p.type]) null);",
+      "    return _get(\"$[p.getField]\", $[p.getDefalutValue]);",
       "  }]",
 
       // Property setters
@@ -453,6 +453,14 @@ public class AutoParseProcessor extends AbstractProcessor {
 
     public String getArgs() {
       return formalArgsString(method);
+    }
+
+    public String getDefalutValue() {
+        String defaultValue = formalArgsString(method);
+        if (defaultValue.isEmpty()) {
+            defaultValue = "(" + method.getReturnType() + ") null";
+        }
+        return defaultValue;
     }
 
     TypeElement owner() {
@@ -799,6 +807,16 @@ public class AutoParseProcessor extends AbstractProcessor {
           if (isReferenceArrayType(method.getReturnType())) {
             reportError("An @AutoParse class cannot define an array-valued property unless it is "
                 + "a byte array", method);
+            errors = true;
+          }
+
+          toImplement.add(method);
+        } else if ((method.getParameters().size() == 1) &&
+            (method.getReturnType().getKind() != TypeKind.VOID) &&
+            (method.getSimpleName().toString().startsWith("get"))) {
+          if (!method.getParameters().get(0).asType().equals(method.getReturnType())) {
+            reportError("An @AutoParse class cannot define an default-value that is difference" +
+                "to return-value ", method);
             errors = true;
           }
 
