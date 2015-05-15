@@ -292,8 +292,8 @@ public class AutoParseProcessor extends AbstractProcessor {
       "      return parseObject.getParseGeoPoint(key);",
       "  }\n",
 
-      "  private ParseObject _get(String key, ParseObject defValue) {",
-      "      return parseObject.getParseObject(key);",
+      "  private <T extends ParseObject> T _get(String key, T defValue) {",
+      "      return (T) parseObject.getParseObject(key);",
       "  }\n",
 
       "  private ParseUser _get(String key, ParseUser defValue) {",
