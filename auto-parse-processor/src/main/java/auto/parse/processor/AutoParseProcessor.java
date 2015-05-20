@@ -372,6 +372,7 @@ public class AutoParseProcessor extends AbstractProcessor {
     // Property setters
     "$[setters:p|\n|\n    @Override",
     "    $[p.access]$[origclass] $[p]($[p.getTypeArgs]) {",
+    "        if ($[p.getArgs] == null) return this;",
     "        put(\"$[p.getField]\", $[p.getArgs]);",
     "        return this;",
     "    }]",
