@@ -170,6 +170,14 @@ public class AutoParseProcessor extends AbstractProcessor {
     }
   }
 
+  private String generatedParseClassName(TypeElement type) {
+    com.parse.ParseClassName parseClassName = type.getAnnotation(com.parse.ParseClassName.class);
+    if (parseClassName != null) {
+      return parseClassName.value();
+    }
+    return classNameOf(type);
+  }
+
   // Return the name of the class, including any enclosing classes but not the package.
   private static String classNameOf(TypeElement type) {
     String name = type.getQualifiedName().toString();
@@ -216,7 +224,7 @@ public class AutoParseProcessor extends AbstractProcessor {
 
     // Class declaration
 
-    "@ParseClassName(\"$[origclass]\")",
+    "@ParseClassName(\"$[parseclass]\")",
     "public class $[subclass]$[formaltypes] extends $[origclass]$[actualtypes] {",
 
     // Fields
@@ -430,7 +438,7 @@ public class AutoParseProcessor extends AbstractProcessor {
     "    }",
     "]",
 
-    "    @ParseClassName(\"$[origclass]\")",
+    "    @ParseClassName(\"$[parseclass]\")",
     "    public static class $[implclass]$[actualtypes] extends $[subclass]$[formaltypes] {",
     "    }",
 
@@ -687,6 +695,7 @@ public class AutoParseProcessor extends AbstractProcessor {
     Map<String, Object> vars = new TreeMap<String, Object>();
     vars.put("type", type);
     vars.put("pkg", TypeSimplifier.packageNameOf(type));
+    vars.put("parseclass", generatedParseClassName(type));
     vars.put("origclass", classNameOf(type));
     vars.put("implclass", generatedImplclassName(type));
     vars.put("simpleclassname", simpleNameOf(classNameOf(type)));
