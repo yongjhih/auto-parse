@@ -17,9 +17,9 @@ after:
 
 ```java
 ParseGameScore gameScore = ParseGameScore.create();
-gameScore.score = 1337;
-gameScore.playerName = "Sean Plott";
-gameScore.cheatMode = false;
+gameScore.setScore(1337);
+gameScore.setPlayerName("Sean Plott");
+gameScore.setCheatMode(false);
 ParseGameScore.commit().saveInBackground();
 ```
 
@@ -27,9 +27,9 @@ ParseGameScore.commit().saveInBackground();
 ParseQuery<AutoParse_ParseGameScore> = ParseQuery.getQuery(AutoParse_ParseGameScore.class);
 ...
 ParseGameScore gameScore = (ParseGameScore) query.findFirst();
-gameScore.score();
-gameScore.playerName();
-gameScore.cheatMode();
+gameScore.getScore();
+gameScore.getPlayerName();
+gameScore.getCheatMode();
 ```
 
 Usage
