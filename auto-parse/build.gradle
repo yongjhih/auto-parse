@@ -1,3 +1,6 @@
+group = GROUP
+version = VERSION_NAME
+
 apply plugin: 'java'
 
 targetCompatibility = '1.6'

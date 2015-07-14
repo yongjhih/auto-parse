@@ -1,5 +1,19 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    }
+}
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+
+repositories {
+    jcenter()
+    maven { url 'https://github.com/8tory/parse-android-sdk.m2/raw/master/' }
+}
 
 android {
   compileSdkVersion 19
