@@ -77,8 +77,8 @@ repositories {
 apply plugin: 'android-apt'
 
 dependencies {
-    compile 'com.github.8tory.auto-parse:auto-parse:-SNAPSHOT'
-    apt 'com.github.8tory.auto-parse:auto-parse-processor:-SNAPSHOT'
+    compile 'com.github.yongjhih.auto-parse:auto-parse:-SNAPSHOT'
+    apt 'com.github.yongjhih.auto-parse:auto-parse-processor:-SNAPSHOT'
 }
 ```
 
