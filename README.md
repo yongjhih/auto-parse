@@ -2,7 +2,7 @@
 
 [![auto-parse](art/auto-parse.png)](art/auto-parse.png)
 
-Easy to use ParseObject
+Easy to use ParseObject.
 
 before:
 
@@ -21,7 +21,7 @@ ParseGameScore gameScore = ParseGameScore.create();
 gameScore.setScore(1337);
 gameScore.setPlayerName("Sean Plott");
 gameScore.setCheatMode(false);
-ParseGameScore.commit().saveInBackground();
+ParseGameScore.saveInBackground();
 ```
 
 ```java
@@ -41,18 +41,14 @@ gameScore.getCheatMode();
 @AutoParse
 public abstract class ParseGameScore extends ParseObject implements Parcelable {
 
-  public abstract String playerName(); // getString("playerName");
-  public String playerName;            // put("playerName", name);
+  public abstract ParseGameScore setPlayerName(String playerName); // put("playerName", name);
+  public abstract String getPlayerName(); // getString("playerName");
 
-  public abstract Integer score();
-  public Integer score;
+  public abstract Integer getScore();
+  public abstract ParseGameScore setScore(Integer score);
 
-  public abstract Boolean cheatMode();
-  public Boolean cheatMode; 
-
-  public ParseGameScore commit() { // dont be abstract method
-      return this;
-  }
+  public abstract Boolean getCheatMode();
+  public Boolean ParseGameScoresetCheatMode(Boolean cheatMode);
 
   public static ParseGameScore create() {
     return new AutoParse_ParseGameScore();
