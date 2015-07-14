@@ -1,5 +1,10 @@
 # AutoParse
 
+[![Download](https://api.bintray.com/packages/yongjhih/maven/auto-parse/images/download.svg) ](https://bintray.com/yongjhih/maven/auto-parse/_latestVersion)
+[![JitPack](https://img.shields.io/github/tag/yongjhih/auto-parse.svg?label=JitPack)](https://jitpack.io/#yongjhih/auto-parse)
+[![Build Status](https://travis-ci.org/yongjhih/auto-parse.svg)](https://travis-ci.org/yongjhih/auto-parse)
+[![Join the chat at https://gitter.im/yongjhih/auto-parse](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/yongjhih/auto-parse?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![auto-parse](art/auto-parse.png)](art/auto-parse.png)
 
 Easy to use ParseObject.
