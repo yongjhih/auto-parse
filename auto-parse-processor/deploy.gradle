@@ -32,11 +32,11 @@ def getSnapshotRepositoryUrl() {
 }
 
 def getRepositoryUsername() {
-    return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
+    return hasProperty('BINTRAY_USER') ? BINTRAY_USER : ""
 }
 
 def getRepositoryPassword() {
-    return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
+    return hasProperty('BINTRAY_KEY') ? BINTRAY_KEY : ""
 }
 
 afterEvaluate { project ->
@@ -46,7 +46,7 @@ afterEvaluate { project ->
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
                 pom.groupId = GROUP
-                //pom.artifactId = POM_ARTIFACT_ID
+                pom.artifactId = POM_ARTIFACT_ID
                 pom.version = VERSION_NAME
 
                 repository(url: getReleaseRepositoryUrl()) {
@@ -92,14 +92,16 @@ afterEvaluate { project ->
         sign configurations.archives
     }
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-      classifier = 'sources'
-      from sourceSets.main.allSource
+    // http://stackoverflow.com/questions/11474729/how-to-build-sources-jar-with-gradle
+    task javadocsJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+        //classpath += configurations.compile // http://stackoverflow.com/questions/10895032/javadoc-with-gradle-dont-get-the-libraries-while-running-javadoc-task
     }
 
-    task javadocsJar(type: Jar, dependsOn: javadoc) {
-      classifier = 'javadoc'
-      from javadoc.destinationDir
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
     }
 
     artifacts {

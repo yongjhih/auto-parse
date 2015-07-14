@@ -24,4 +24,4 @@ tasks.withType(Test) {
   }
 }
 
-apply from: 'gradle-mvn-push.gradle'
+apply from: 'deploy.gradle'
