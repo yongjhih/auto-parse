@@ -160,16 +160,6 @@ public class AutoParseProcessor extends AbstractProcessor {
     }
   }
 
-  private String generatedImplclassName(TypeElement type) {
-    if (classNameOf(type).startsWith("Base")) {
-      return classNameOf(type).replaceFirst("^Base", "");
-    } else if (classNameOf(type).startsWith("Abs")) {
-      return classNameOf(type).replaceFirst("^Abs", "");
-    } else {
-      return classNameOf(type).replaceFirst("^Abstract", "");
-    }
-  }
-
   // Return the name of the class, including any enclosing classes but not the package.
   private static String classNameOf(TypeElement type) {
     String name = type.getQualifiedName().toString();
@@ -430,10 +420,6 @@ public class AutoParseProcessor extends AbstractProcessor {
     "    }",
     "]",
 
-    "    @ParseClassName(\"$[origclass]\")",
-    "    public static class $[implclass]$[actualtypes] extends $[subclass]$[formaltypes] {",
-    "    }",
-
     "}"
     // CHECKSTYLE:ON
   );
@@ -680,15 +666,10 @@ public class AutoParseProcessor extends AbstractProcessor {
     if (ancestorIsAndroidAutoParse(type)) {
       abortWithError("One @AutoParse class may not extend another", type);
     }
-    if (!isBaseClass(type)) {
-      abortWithError("Class name must start with Base or Abs or Abstract", type);
-    }
-
     Map<String, Object> vars = new TreeMap<String, Object>();
     vars.put("type", type);
     vars.put("pkg", TypeSimplifier.packageNameOf(type));
     vars.put("origclass", classNameOf(type));
-    vars.put("implclass", generatedImplclassName(type));
     vars.put("simpleclassname", simpleNameOf(classNameOf(type)));
     vars.put("formaltypes", formalTypeString(type));
     vars.put("actualtypes", actualTypeString(type));
@@ -910,12 +891,6 @@ public class AutoParseProcessor extends AbstractProcessor {
       }
       type = parentElement;
     }
-  }
-
-  private boolean isBaseClass(TypeElement type) {
-      return classNameOf(type).startsWith("Base") ||
-            classNameOf(type).startsWith("Abs") ||
-            classNameOf(type).startsWith("Abstract");
   }
 
   // Return a string like "1234L" if type instanceof Serializable and defines
