@@ -63,7 +63,7 @@ public abstract class ParseGameScore extends ParseObject implements Parcelable {
 
 ## Installation
 
-via jitpack(in progress):
+via jitpack:
 
 ```gradle
 buildscript {
