@@ -87,7 +87,7 @@ dependencies {
 }
 ```
 
-via jcenter(in progress):
+via jcenter:
 
 ```gradle
 buildscript {
