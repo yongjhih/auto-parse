@@ -54,7 +54,7 @@ public abstract class ParseGameScore extends ParseObject implements Parcelable {
   public abstract ParseGameScore setScore(Integer score);
 
   public abstract Boolean getCheatMode();
-  public Boolean ParseGameScoresetCheatMode(Boolean cheatMode);
+  public abstract Boolean ParseGameScoresetCheatMode(Boolean cheatMode);
 
   public static ParseGameScore create() {
     return new AutoParse_ParseGameScore();
