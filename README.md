@@ -1,5 +1,6 @@
 # AutoParse
 
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AutoParse-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/2156)
 [![Download](https://api.bintray.com/packages/yongjhih/maven/auto-parse/images/download.svg) ](https://bintray.com/yongjhih/maven/auto-parse/_latestVersion)
 [![JitPack](https://img.shields.io/github/tag/yongjhih/auto-parse.svg?label=JitPack)](https://jitpack.io/#yongjhih/auto-parse)
 [![Build Status](https://travis-ci.org/yongjhih/auto-parse.svg)](https://travis-ci.org/yongjhih/auto-parse)
